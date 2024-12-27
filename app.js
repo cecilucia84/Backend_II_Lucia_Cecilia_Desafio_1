@@ -1,33 +1,28 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const passport = require('passport');
-require('dotenv').config();
-require('./config/passport'); // Asegúrate de que este archivo esté correctamente importado
+import express from 'express';
+import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import dotenv from 'dotenv';
+import sessionRoutes from './routes/sessionRoutes.js';
+import './config/passport.js';
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const uri = process.env.MONGODB_URI;
+const dbName = process.env.MONGODB_NAME;
 
-// Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
 // Conexión a MongoDB
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_NAME;
-
 mongoose.connect(uri, { dbName })
-  .then(() => {
-    console.log('Conectado correctamente a MongoDB');
-  })
-  .catch((error) => {
-    console.error('Error al conectar a MongoDB:', error);
-  });
+  .then(() => console.log('Conectado correctamente a MongoDB'))
+  .catch((error) => console.error('Error al conectar a MongoDB:', error));
 
 // Rutas
-const sessionRoutes = require('./routes/sessionRoutes');
 app.use('/api/sessions', sessionRoutes);
 
-// Iniciar el servidor
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));

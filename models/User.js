@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
   first_name: { type: String, required: true },
@@ -11,16 +11,16 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: 'user' },
 });
 
-// Encriptar contraseña antes de guardar usando hashSync
+// Middleware para encriptar contraseña
 userSchema.pre('save', function (next) {
   if (!this.isModified('password')) return next();
-  this.password = bcrypt.hashSync(this.password, 10);  // Usando hashSync
+  this.password = bcrypt.hashSync(this.password, 10);
   next();
 });
 
-// Método para verificar la contraseña
-userSchema.methods.isValidPassword = function(password) {
+// Método para validar contraseña
+userSchema.methods.isValidPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

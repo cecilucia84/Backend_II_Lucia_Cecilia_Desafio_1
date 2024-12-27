@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 require('dotenv').config();
-require('./config/passport');  // Requiere la configuración de Passport
+require('./config/passport'); // Asegúrate de que este archivo esté correctamente importado
 
 const app = express();
 
